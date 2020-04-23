@@ -6,6 +6,7 @@
   <Page class="sapUiResponsiveContentPadding">
 
     <content>
+      <Text text="UPDATED!!" width="100%" />
       <Text text="UEUE" width="100%" />
 
       <Text text="{i18n>test_name}" />
