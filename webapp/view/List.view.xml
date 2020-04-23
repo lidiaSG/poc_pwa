@@ -1,0 +1,17 @@
+<mvc:View
+  controllerName="com.frigicoll.poc_pwa.controller.List"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true"
+  xmlns="sap.m">
+  <Page class="sapUiResponsiveContentPadding">
+
+    <content>
+      <Text text="UEUE" width="100%" />
+
+      <Text text="{i18n>test_name}" />
+
+      <Text text="{appData>/hello_world}" width="100%" />
+      <Text text="{appData>/endpoint}" width="100%" />
+    </content>
+  </Page>
+</mvc:View>

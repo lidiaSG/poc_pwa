@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+
+	<!-- PWA related meta tags -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- PWA manifest -->
+	<link rel="manifest" href="manifest_pwa.json">
+
+	<!-- Add to home screen for Safari on iOS -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-title" content="OpenUI5 TODO PWA">
+	<link rel="apple-touch-icon" href="webapp/icons/icon-152x152.png">
+
+	<!-- Windows related -->
+	<meta name="msapplication-TileImage" content="webapp/icons/icon-144x144.png">
+	<meta name="msapplication-TileColor" content="#386CC1">
+	<meta name="theme-color" content="#164391">
+
+	<title>UI5 TODO Application</title>
+	<style>
+		body {
+			background: #244C7C;
+		}
+		#splash-screen {
+			color:white;
+			text-align:center;
+		}
+	</style>
+
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+
+	<!-- TODO: Add SDKs for Firebase products that you want to use
+	     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+	<script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-messaging.js"></script>
+	<!-- <script src="/__/firebase/init.js"></script> -->
+	<script src="https://www.gstatic.com/firebasejs/init.js"></script>
+
+	<script>
+	  // Your web app's Firebase configuration
+	  var firebaseConfig = {
+	    apiKey: "AIzaSyA1YQ1wvpFe8c0UzGU2QMxjE8BtOjTWB5U",
+	    authDomain: "test0-99be6.firebaseapp.com",
+	    databaseURL: "https://test0-99be6.firebaseio.com",
+	    projectId: "test0-99be6",
+	    storageBucket: "test0-99be6.appspot.com",
+	    messagingSenderId: "1091260237607",
+	    appId: "1:1091260237607:web:9a6ef1f656d4257465cb02"
+	  };
+	  // Initialize Firebase
+	  firebase.initializeApp(firebaseConfig);
+	</script>
+
+	<!--
+		<YOUR_PUBLIC_VAPID_KEY_HERE>
+		BCG64b9sGLKTY_m-LL1JTxbDd1s5GJFLWqszo2qsEQkX19cpB8x9Wq8jwf_tw0eMOcASY75IPImIyBw_5sgp5dI
+	-->
+	<!-- Import and configure the Firebase SDK -->
+<!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
+<!-- If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
+<!-- <script src="/__/firebase/7.14.0/firebase-app.js"></script>
+<script src="/__/firebase/7.14.0/firebase-messaging.js"></script>
+<script src="/__/firebase/init.js"></script> -->
+
+<script>
+  // [START get_messaging_object]
+  // Retrieve Firebase Messaging object.
+  const messaging = firebase.messaging();
+  // [END get_messaging_object]
+  // [START set_public_vapid_key]
+  // Add the public key generated from the console here.
+  messaging.usePublicVapidKey('BCG64b9sGLKTY_m-LL1JTxbDd1s5GJFLWqszo2qsEQkX19cpB8x9Wq8jwf_tw0eMOcASY75IPImIyBw_5sgp5dI');
+  // [END set_public_vapid_key]
+
+
+  // [START refresh_token]
+  // Callback fired if Instance ID token is updated.
+  messaging.onTokenRefresh(() => {
+    messaging.getToken().then((refreshedToken) => {
+      console.log('Token refreshed.');
+      // Indicate that the new Instance ID token has not yet been sent to the
+      // app server.
+      setTokenSentToServer(false);
+      // Send Instance ID token to app server.
+      sendTokenToServer(refreshedToken);
+      // [START_EXCLUDE]
+      // Display new Instance ID token and clear UI of all previous messages.
+      resetUI();
+      // [END_EXCLUDE]
+    }).catch((err) => {
+      console.log('Unable to retrieve refreshed token ', err);
+      showToken('Unable to retrieve refreshed token ', err);
+    });
+  });
+  // [END refresh_token]
+
+  // [START receive_message]
+  // Handle incoming messages. Called when:
+  // - a message is received while the app has focus
+  // - the user clicks on an app notification created by a service worker
+  //   `messaging.setBackgroundMessageHandler` handler.
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    // [START_EXCLUDE]
+    // Update the UI to include the received message.
+    appendMessage(payload);
+    // [END_EXCLUDE]
+  });
+  // [END receive_message]
+
+  function resetUI() {
+    clearMessages();
+    showToken('loading...');
+    // [START get_token]
+    // Get Instance ID token. Initially this makes a network call, once retrieved
+    // subsequent calls to getToken will return from cache.
+    messaging.getToken().then((currentToken) => {
+      if (currentToken) {
+        sendTokenToServer(currentToken);
+        updateUIForPushEnabled(currentToken);
+      } else {
+        // Show permission request.
+        console.log('No Instance ID token available. Request permission to generate one.');
+        // Show permission UI.
+        updateUIForPushPermissionRequired();
+        setTokenSentToServer(false);
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+      showToken('Error retrieving Instance ID token. ', err);
+      setTokenSentToServer(false);
+    });
+    // [END get_token]
+  }
+
+
+  function showToken(currentToken) {
+    // Show token in console and UI.
+    /*const tokenElement = document.querySelector('#token');
+    tokenElement.textContent = currentToken;*/
+    if (window.abc) debugger;
+    console.log("XXXXX: SHOW TOKEN: " + currentToken);
+  }
+
+  // Send the Instance ID token your application server, so that it can:
+  // - send messages back to this app
+  // - subscribe/unsubscribe the token from topics
+  function sendTokenToServer(currentToken) {
+    if (!isTokenSentToServer()) {
+      console.log('Sending token to server...');
+      // TODO(developer): Send the current token to your server.
+      setTokenSentToServer(true);
+    } else {
+      console.log('Token already sent to server so won\'t send it again ' +
+          'unless it changes');
+    }
+
+  }
+
+  function isTokenSentToServer() {
+    return window.localStorage.getItem('sentToServer') === '1';
+  }
+
+  function setTokenSentToServer(sent) {
+    window.localStorage.setItem('sentToServer', sent ? '1' : '0');
+  }
+
+  function showHideDiv(divId, show) {
+    /*const div = document.querySelector('#' + divId);
+    if (show) {
+      div.style = 'display: visible';
+    } else {
+      div.style = 'display: none';
+    }*/
+  }
+
+  function requestPermission() {
+    console.log('Requesting permission...');
+    // [START request_permission]
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        // TODO(developer): Retrieve an Instance ID token for use with FCM.
+        // [START_EXCLUDE]
+        // In many cases once an app has been granted notification permission,
+        // it should update its UI reflecting this.
+        resetUI();
+        // [END_EXCLUDE]
+      } else {
+        console.log('Unable to get permission to notify.');
+      }
+    });
+    // [END request_permission]
+  }
+
+  function deleteToken() {
+    // Delete Instance ID token.
+    // [START delete_token]
+    messaging.getToken().then((currentToken) => {
+      messaging.deleteToken(currentToken).then(() => {
+        console.log('Token deleted.');
+        setTokenSentToServer(false);
+        // [START_EXCLUDE]
+        // Once token is deleted update UI.
+        resetUI();
+        // [END_EXCLUDE]
+      }).catch((err) => {
+        console.log('Unable to delete token. ', err);
+      });
+      // [END delete_token]
+    }).catch((err) => {
+      console.log('Error retrieving Instance ID token. ', err);
+      showToken('Error retrieving Instance ID token. ', err);
+    });
+
+  }
+
+  // Add a message to the messages element.
+  function appendMessage(payload) {
+    debugger;
+    /*const messagesElement = document.querySelector('#messages');
+    const dataHeaderELement = document.createElement('h5');
+    const dataElement = document.createElement('pre');
+    dataElement.style = 'overflow-x:hidden;';
+    dataHeaderELement.textContent = 'Received message:';
+    dataElement.textContent = JSON.stringify(payload, null, 2);
+    messagesElement.appendChild(dataHeaderELement);
+    messagesElement.appendChild(dataElement);*/
+  }
+
+  // Clear the messages element of all children.
+  function clearMessages() {
+    debugger;
+    /*const messagesElement = document.querySelector('#messages');
+    while (messagesElement.hasChildNodes()) {
+      messagesElement.removeChild(messagesElement.lastChild);
+    }*/
+  }
+
+  function updateUIForPushEnabled(currentToken) {
+debugger;
+    showToken(currentToken);
+  }
+
+  function updateUIForPushPermissionRequired() {
+debugger;
+  }
+
+  resetUI();
+</script>
+
+
+
+
+	<!-- Register service worker -->
+	<script src="register-worker.js"></script>
+
+	<!-- Load openui5 libraries -->
+	<script
+		id="sap-ui-bootstrap"
+		src="https://sapui5.hana.ondemand.com/1.60.2/resources/sap-ui-core.js"
+		data-sap-ui-libs="sap.m"
+		data-sap-ui-resourceroots='{
+			"com.frigicoll.poc_pwa": "./"
+		}'
+		data-sap-ui-preload="async"
+		data-sap-ui-theme="sap_belize_plus">
+	</script>
+
+	<!-- Load and run the application -->
+	<script>
+			sap.ui.getCore().attachInit(function() {
+
+				document.getElementById("splash-screen").remove(); // delete the splash screen
+
+				new sap.m.Shell({
+					app: new sap.ui.core.ComponentContainer({
+						height : "100%",
+						name : "com.frigicoll.poc_pwa"
+					}),
+					appWidthLimited: false,
+					logo: ""
+				}).placeAt("body");
+
+				// sap.ui.require("com/frigicoll/poc_pwa/3rdParty/web-push/cli")
+			});
+		</script>
+</head>
+
+<body id="body" class="sapUiBody">
+	<div id="splash-screen">
+		<h1>UI5 TODO List as a Progressive Web Application</h1>
+		<img src="logo.svg" alt="UI5 TODO Logo">
+		<p>This example demonstrates how to create an installable full screen UI5 based application 
+			with Fiori look and feel on a mobile device.</p>
+	</div>
+</body>
+
+</html>
+
+<!-- 
+      // VAPID keys
+      // Public key = BCG64b9sGLKTY_m-LL1JTxbDd1s5GJFLWqszo2qsEQkX19cpB8x9Wq8jwf_tw0eMOcASY75IPImIyBw_5sgp5dI
+      // Private key = qqStHHdyoS6epmi-mg2TXV4a6XoTn6o0n88jfWE7sIk
+ -->
