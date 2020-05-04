@@ -33,7 +33,10 @@
 	</style>
 
 	<!-- The core Firebase JS SDK is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+
+  <!-- google maps api script load-->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdrb9pLXVnViAu-wQ_X5YAHLn4PA-PiIE"></script>
 
 	<!-- TODO: Add SDKs for Firebase products that you want to use
 	     https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -144,7 +147,7 @@
     // Show token in console and UI.
     /*const tokenElement = document.querySelector('#token');
     tokenElement.textContent = currentToken;*/
-    if (window.abc) debugger;
+    if (window.abc)
     console.log("XXXXX: SHOW TOKEN: " + currentToken);
   }
 
@@ -223,7 +226,6 @@
 
   // Add a message to the messages element.
   function appendMessage(payload) {
-    debugger;
     /*const messagesElement = document.querySelector('#messages');
     const dataHeaderELement = document.createElement('h5');
     const dataElement = document.createElement('pre');
@@ -236,7 +238,6 @@
 
   // Clear the messages element of all children.
   function clearMessages() {
-    debugger;
     /*const messagesElement = document.querySelector('#messages');
     while (messagesElement.hasChildNodes()) {
       messagesElement.removeChild(messagesElement.lastChild);
@@ -244,12 +245,10 @@
   }
 
   function updateUIForPushEnabled(currentToken) {
-debugger;
     showToken(currentToken);
   }
 
   function updateUIForPushPermissionRequired() {
-debugger;
   }
 
   resetUI();
