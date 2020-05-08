@@ -63,6 +63,10 @@ sap.ui.define([
 				map:map,
 				//icon:props.iconImage
 			});
+		},
+
+		onTTPress: function() {
+			this.getView().getModel("appData").setProperty("/tt", new Date());
 		}
 	});
 });
