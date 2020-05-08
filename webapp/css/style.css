@@ -2,3 +2,10 @@
     width: 100%;
     height: 50%;
 }
+
+.testButton .sapMBtnInner {
+	background: red !important;
+}
+.testButton2 .sapMBtnInner {
+	background: green !important;
+}

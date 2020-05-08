@@ -16,8 +16,9 @@
       
       </VBox>
       <Text text="{appData>/endpoint}" width="100%" />
-      <Button text="press me" press="onTTPress" />
-      <Text text="{appData>/tt}" />
+      <Button text="press me" press="onTTPress" class="testButton" />
+      <Button text="press me" press="onTTPress" class="testButton2" />
+      <Text text="{appData>/tt}" width="100%" />
     </content>
   </Page>
 </mvc:View>
