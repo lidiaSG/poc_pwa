@@ -12,13 +12,7 @@
       <Text text="{i18n>test_name}" />
 
       <Text text="{appData>/hello_world}" width="100%" />
-      <VBox id="mapContainer" class="mapContainer">
-      
-      </VBox>
       <Text text="{appData>/endpoint}" width="100%" />
-      <Button text="press me" press="onTTPress" class="testButton" />
-      <Button text="press me" press="onTTPress" class="testButton2" />
-      <Text text="{appData>/tt}" width="100%" />
     </content>
   </Page>
 </mvc:View>

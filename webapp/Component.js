@@ -20,6 +20,7 @@ sap.ui.define([
 			UIComponent.prototype.init.apply(this, arguments);
 
 			this.getRouter().initialize();
+			debugger;
 
 			var oAppDataModel = this.getModel("appData");
 			setTimeout(async () => {
@@ -35,6 +36,8 @@ sap.ui.define([
 				});
 
 				oAppDataModel.setProperty("/endpoint", JSON.stringify(oPush));
+
+					debugger;
 				console.log("XXXXXXXXXXXXXX: " + JSON.stringify(oPush));
 
 				/*sap.m.URLHelper.triggerEmail(
