@@ -59,7 +59,7 @@ self.addEventListener('push', event => {
 
   const options = {
     body: body,
-    icon: '/images/photo3D.jpg',
+    icon: 'images/photo3D.jpg',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -69,11 +69,11 @@ self.addEventListener('push', event => {
       {
         action: 'explore',
         title: 'Aceptar',
-        icon: '/images/checkmark.png'},
+        icon: 'images/checkmark.png'},
       {
         action: 'close',
         title: 'Reasignar',
-        icon: '/images/xmark.png'}
+        icon: 'images/xmark.png'}
     ]
   };
 
